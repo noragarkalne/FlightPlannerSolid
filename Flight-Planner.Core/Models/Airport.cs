@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Flight_Planner.Core.Models
 {
@@ -10,7 +11,7 @@ namespace Flight_Planner.Core.Models
     {
         public string Country { get; set; }
         public string City { get; set; }
-        //[JsonProperty(PropertyName = "airport")]
+        [JsonProperty(PropertyName = "airport")]
         public string AirportCode { get; set; }
 
         public override bool Equals(object obj)

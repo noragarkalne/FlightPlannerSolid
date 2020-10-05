@@ -1,12 +1,17 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Results;
 using AutoMapper;
 using Flight_Planner.Attributes;
+using Flight_Planner.Core.Interfaces;
 using Flight_Planner.Core.Models;
 using Flight_Planner.Core.Services;
+using Flight_Planner.Models;
+using Flight_Planner.Services;
 using Flight_Planner_Data;
 
 namespace Flight_Planner.Controllers
@@ -28,15 +33,39 @@ namespace Flight_Planner.Controllers
             {
                 return NotFound();
             }
-            return Ok(flight);
+           
+            return Ok(_mapper.Map(flight, new FlightResponse()));
         }
 
+        [HttpGet, Route("admin-api/flights/{id}")]
+        public async Task<IHttpActionResult> GetFlights()
+        {
+            var flights = await _flightService.GetFlights();
 
+            return Ok(
+                flights.Select(f => _mapper.Map<FlightResponse>(f)).ToList()); // =ToList
+        }
 
         [HttpPut, Route("admin-api/flights")]
-        public IHttpActionResult Add()
+        public async Task<IHttpActionResult> Add(Flight flight)
         {
-            return Ok();
+
+            if (_flightService.IsFlightValid(flight) == false|| _flightService.IsAirportValid(flight) == false)
+            {
+                return BadRequest();
+            }
+
+            var task = await _flightService.AddFlights(flight);
+
+            if (task.Succeeded == false)
+            {
+                return Conflict();
+            }
+
+            
+            flight.Id = task.Entity.Id;
+            
+            return Created("",_mapper.Map<FlightResponse>(flight));
         }
 
         [HttpDelete, Route("admin-api/flights/{id}")]
