@@ -13,9 +13,13 @@ namespace Flight_Planner.Core.Services
 
         Task<IEnumerable<Flight>> GetFlights();
         Task<ServiceResult> AddFlights(Flight flight);
-        //Task<ServiceResult> DeleteById(int id);
+        
         void ClearFlights();
         bool IsFlightValid(Flight flight);
         bool IsAirportValid(Flight flight);
+
+        Task<ServiceResult> DeleteFlight(int id);
+        Task<HashSet<Airport>> SearchByIncompletePhrases(string search);
+        Task<Flight> GetFlight(int id);
     }
 }

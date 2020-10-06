@@ -1,15 +1,13 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Flight_Planner.Core.Interfaces;
 using Flight_Planner.Core.Models;
 using Flight_Planner.Core.Services;
 using Flight_Planner_Data;
+
+
 
 namespace Flight_Planner.Services
 {
@@ -23,7 +21,10 @@ namespace Flight_Planner.Services
         {
             return await Query().ToListAsync();
         }
-
+        public async Task<Flight> GetFlight(int id)
+        {
+            return await GetById<Flight>(id);
+        }
         public async Task<ServiceResult> AddFlights(Flight flight)
         {
             var flights = await GetFlights();
@@ -42,6 +43,20 @@ namespace Flight_Planner.Services
             _ctx.Airports.RemoveRange(_ctx.Airports);
             _ctx.SaveChanges();
         }
+
+        public async Task<ServiceResult> DeleteFlight(int id)
+        {
+            var flights = await GetFlights();
+            foreach (var flight in flights)
+            {
+                if ( flight.Id.Equals(id))
+                {
+                  return Delete(flight);
+                }
+            }
+            return new ServiceResult(false);
+        }
+
 
         public bool IsFlightValid(Flight flight)
         {
@@ -83,6 +98,20 @@ namespace Flight_Planner.Services
             }
 
             return false;
+        }
+        
+        public async Task<HashSet<Airport>> SearchByIncompletePhrases(string search)
+        {
+            var flights = await GetFlights();
+            var flightTo = flights.Where(x => x.To.Country.ToString().ToLower().Contains(search.ToLower().Trim()) ||
+                                              x.To.City.ToString().ToLower().Contains(search.ToLower().Trim()) ||
+                                              x.To.AirportCode.ToString().ToLower().Contains(search.ToLower().Trim())).Select(y => y.To).ToList();
+            var flightFrom = flights.Where(x => x.From.Country.ToString().ToLower().Contains(search.ToLower().Trim()) ||
+                                                x.From.City.ToString().ToLower().Contains(search.ToLower().Trim()) ||
+                                                x.From.AirportCode.ToString().ToLower().Contains(search.ToLower().Trim())).Select(y => y.From).ToList();
+
+            var result = flightTo.Concat(flightFrom).ToHashSet();
+            return result;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Flight_Planner.Controllers
         [HttpGet, Route("admin-api/flights/{id}")]
         public async Task<IHttpActionResult> Get(int id)
         {
-            var flight = await _flightService.GetById(id);
+            var flight = await _flightService.GetFlight(id);
 
             if (flight == null)
             {
@@ -69,11 +69,23 @@ namespace Flight_Planner.Controllers
         }
 
         [HttpDelete, Route("admin-api/flights/{id}")]
-        public IHttpActionResult Delete()
+        public async Task<IHttpActionResult> Delete(int id)
         {
-            return Ok();
-        }
+            var flight = await _flightService.GetById(id);
 
-        
+            if (flight != null)
+            {
+                await _flightService.DeleteFlight(id);
+                return Ok();
+            }
+
+            if (flight == null)
+            {
+                return Ok();
+            }
+
+            return NotFound();
+
+        }
     }
 }

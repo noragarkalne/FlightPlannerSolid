@@ -1,42 +1,59 @@
-﻿using System.Collections.Generic;
-
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
-using Flight_Planner.Controllers;
 using Flight_Planner.Core.Services;
+using Flight_Planner.Models;
 
-namespace FlightPlannerApi.Controllers
+namespace Flight_Planner.Controllers
 {
-    public class CustomerController : ApiController
+    public class CustomerController : BasicApiController
     {
-
-        [HttpGet, Route("api/airports")]
-        public IHttpActionResult Airports()
+        public CustomerController(IFlightService flightService, IMapper mapper)
+            : base(flightService, mapper)
         {
-
-            return Ok();
         }
 
-        //[HttpGet, Route("/flights/{id}")]
-        //public async Task<IHttpActionResult> Get(int id)
-        //{
-        //    var flight = await _flightService.GetById(id);
+        [HttpGet, Route("api/airports")]
+        public async Task<IHttpActionResult> Search(string searchedPhrase)
+        {
 
-        //    if (flight == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return Ok(flight); //?
-        //}
+            var result = await _flightService.SearchByIncompletePhrases(searchedPhrase);
+            return Ok(_mapper.Map(result, new AirportResponse()));
+        }
+
+        [HttpGet, Route("flights/{id}")]
+        public async Task<IHttpActionResult> Get(int id)
+        {
+            var flight = await _flightService.GetFlight(id);
+
+            if (flight == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map(flight, new FlightResponse()));
+        }
 
         [HttpPost, Route("api/flights/search")]
-        public IHttpActionResult Flights()
+        public async Task<IHttpActionResult> Flights(SearchFlightRequest req)
         {
-            return Ok();
+            if (SearchFlightRequest.IsRequestValid(req) == false)
+            {
+                return BadRequest();
+            }
+
+            var result = new PageResult();
+            var flights = await _flightService.GetFlights();
+
+            foreach (var f in flights)
+            {
+                if (SearchFlightRequest.IsRequestValid(req)) //FlightStorage.IsSearchValid(req) &&
+                {
+                    result.Items.Add(f);
+                    result.TotalItems++;
+                }
+            }
+            return Ok(result);
         }
     }
 }
