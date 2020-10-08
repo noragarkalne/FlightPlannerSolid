@@ -21,5 +21,6 @@ namespace Flight_Planner.Core.Services
         Task<ServiceResult> DeleteFlight(int id);
         Task<HashSet<Airport>> SearchByIncompletePhrases(string search);
         Task<Flight> GetFlight(int id);
+        Task<IEnumerable<Flight>> SearchFlights(FlightSearch req);
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.Remoting.Contexts;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
@@ -19,6 +21,7 @@ namespace Flight_Planner.Controllers
     [BasicAuthentification]
     public class AdminController : BasicApiController
     {
+        //private static object _myObjectList = new object();
         public AdminController(IFlightService flightService, IMapper mapper) 
             : base(flightService, mapper)
         {
@@ -49,23 +52,25 @@ namespace Flight_Planner.Controllers
         [HttpPut, Route("admin-api/flights")]
         public async Task<IHttpActionResult> Add(Flight flight)
         {
-
-            if (_flightService.IsFlightValid(flight) == false|| _flightService.IsAirportValid(flight) == false)
-            {
-                return BadRequest();
-            }
-
-            var task = await _flightService.AddFlights(flight);
-
-            if (task.Succeeded == false)
-            {
-                return Conflict();
-            }
-
             
-            flight.Id = task.Entity.Id;
+                if (_flightService.IsFlightValid(flight) == false || _flightService.IsAirportValid(flight) == false)
+                {
+                    return BadRequest();
+                }
+
+                var task = await _flightService.AddFlights(flight);
+
+
+                if (task.Succeeded == false)
+                {
+                    return Conflict();
+                }
+
+
+                flight.Id = task.Entity.Id;
+
+                return Created("", _mapper.Map<FlightResponse>(flight));
             
-            return Created("",_mapper.Map<FlightResponse>(flight));
         }
 
         [HttpDelete, Route("admin-api/flights/{id}")]

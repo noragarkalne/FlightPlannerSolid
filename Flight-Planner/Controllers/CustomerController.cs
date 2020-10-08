@@ -1,8 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Flight_Planner.Core.Models;
 using Flight_Planner.Core.Services;
 using Flight_Planner.Models;
+using Flight_Planner.Services;
+using Newtonsoft.Json.Linq;
 
 namespace Flight_Planner.Controllers
 {
@@ -14,14 +19,14 @@ namespace Flight_Planner.Controllers
         }
 
         [HttpGet, Route("api/airports")]
-        public async Task<IHttpActionResult> Search(string searchedPhrase)
+        public async Task<IHttpActionResult> Search(string search)
         {
-
-            var result = await _flightService.SearchByIncompletePhrases(searchedPhrase);
-            return Ok(_mapper.Map(result, new AirportResponse()));
+            search = search ?? string.Empty;
+            var result = await _flightService.SearchByIncompletePhrases(search);
+            return Ok(_mapper.Map(result, new List<AirportResponse>()));
         }
 
-        [HttpGet, Route("flights/{id}")]
+        [HttpGet, Route("api/flights/{id}")]
         public async Task<IHttpActionResult> Get(int id)
         {
             var flight = await _flightService.GetFlight(id);
@@ -35,25 +40,26 @@ namespace Flight_Planner.Controllers
         }
 
         [HttpPost, Route("api/flights/search")]
-        public async Task<IHttpActionResult> Flights(SearchFlightRequest req)
+        public async Task<IHttpActionResult> Flights(SearchFlightsRequest req)
         {
-            if (SearchFlightRequest.IsRequestValid(req) == false)
+            
+            if (SearchFlightsRequest.IsRequestValid(req) == false) //novalideeju vai nav null un vai pats req der
             {
                 return BadRequest();
-            }
+            } //ja neder viss beidzas te
 
             var result = new PageResult();
-            var flights = await _flightService.GetFlights();
+            var x = _mapper.Map<FlightSearch>(req); //nomapoju
+            var matching =  await _flightService.SearchFlights(x);
 
-            foreach (var f in flights)
+            var enumerable = matching.ToList();
+            if (enumerable.Any()) //parbaudu vai tads jau ir 
             {
-                if (SearchFlightRequest.IsRequestValid(req)) //FlightStorage.IsSearchValid(req) &&
-                {
-                    result.Items.Add(f);
-                    result.TotalItems++;
-                }
+                result.Items.AddRange(enumerable.ToList()); //ja ir pievienoju pieprasito 
+                result.TotalItems = enumerable.Count; // palielinu skaitu
             }
-            return Ok(result);
+
+            return Ok(result); // atdodu atpakal page result.
         }
     }
 }

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Web;
 using AutoMapper;
 using Flight_Planner.Core.Models;
+using Flight_Planner.Core.Services;
 using Flight_Planner.Models;
+using Flight_Planner.Services;
 
 namespace Flight_Planner.App_Start
 {
@@ -29,6 +31,8 @@ namespace Flight_Planner.App_Start
                 cfg.CreateMap<AirportResponse, Airport>()
                     .ForMember(m => m.Id, o => o.Ignore());
                 cfg.CreateMap<Flight, FlightResponse>();
+                cfg.CreateMap<SearchFlightsRequest, FlightSearch>();
+                cfg.CreateMap<FlightSearch,SearchFlightsRequest>();
 
 
             });

@@ -36,6 +36,7 @@
       <HintPath>..\Flight-Planner-Data\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -50,6 +51,7 @@
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\Flight.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\FlightSearch.cs" />
     <Compile Include="Services\IAirportService.cs" />
     <Compile Include="Services\IDbService.cs" />
     <Compile Include="Services\IEntityService.cs" />

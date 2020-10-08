@@ -1,18 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
+using System.Threading;
 using System.Threading.Tasks;
 using Flight_Planner.Core.Models;
 using Flight_Planner.Core.Services;
 using Flight_Planner_Data;
-
+using Microsoft.Ajax.Utilities;
 
 
 namespace Flight_Planner.Services
 {
     public class FlightService : EntityService<Flight>, IFlightService
     {
+        //private static object _myObjectList = new object();
+        object tLock = new object();
+
         public FlightService(IFlightPlannerDbContext context) : base(context)
         {
         }
@@ -21,20 +27,22 @@ namespace Flight_Planner.Services
         {
             return await Query().ToListAsync();
         }
+
         public async Task<Flight> GetFlight(int id)
         {
             return await GetById<Flight>(id);
         }
+
         public async Task<ServiceResult> AddFlights(Flight flight)
         {
-            var flights = await GetFlights();
+            var flights = await _ctx.Flights.ToListAsync();
 
             if (flights.Any(f => f.Equals(flight)))
             {
                 return new ServiceResult(false);
             }
 
-            return Create(flight); 
+            return Create(flight);
         }
 
         public void ClearFlights()
@@ -49,11 +57,12 @@ namespace Flight_Planner.Services
             var flights = await GetFlights();
             foreach (var flight in flights)
             {
-                if ( flight.Id.Equals(id))
+                if (flight.Id.Equals(id))
                 {
-                  return Delete(flight);
+                    return Delete(flight);
                 }
             }
+
             return new ServiceResult(false);
         }
 
@@ -99,19 +108,30 @@ namespace Flight_Planner.Services
 
             return false;
         }
-        
+
         public async Task<HashSet<Airport>> SearchByIncompletePhrases(string search)
         {
-            var flights = await GetFlights();
-            var flightTo = flights.Where(x => x.To.Country.ToString().ToLower().Contains(search.ToLower().Trim()) ||
-                                              x.To.City.ToString().ToLower().Contains(search.ToLower().Trim()) ||
-                                              x.To.AirportCode.ToString().ToLower().Contains(search.ToLower().Trim())).Select(y => y.To).ToList();
-            var flightFrom = flights.Where(x => x.From.Country.ToString().ToLower().Contains(search.ToLower().Trim()) ||
-                                                x.From.City.ToString().ToLower().Contains(search.ToLower().Trim()) ||
-                                                x.From.AirportCode.ToString().ToLower().Contains(search.ToLower().Trim())).Select(y => y.From).ToList();
+            
+            var airports =  _ctx.Airports.Where(x => x.Country.ToString().ToLower().Contains(search.ToLower().Trim()) ||
+                                              x.City.ToString().ToLower().Contains(search.ToLower().Trim()) ||
+                                              x.AirportCode.ToString().ToLower().Contains(search.ToLower().Trim()))
+                .ToList();
 
-            var result = flightTo.Concat(flightFrom).ToHashSet();
+            var result = airports.ToHashSet();
             return result;
+        }
+
+        public async Task<IEnumerable<Flight>> SearchFlights(FlightSearch req)
+        {
+            var matchingFlights = await _ctx.Flights.Where(f => f.To.AirportCode.ToLower() == req.To.ToLower() &&
+                                                                f.From.AirportCode.ToLower() == req.From.ToLower() &&
+                                                                f.DepartureTime.Contains(req.DepartureDate))
+                .ToListAsync();
+            return matchingFlights.DistinctBy(f => new
+            {
+                f.DepartureTime, f.ArrivalTime
+                , f.Carrier, f.To.City, f.To.AirportCode, f.To.Country
+            }).ToList();
         }
     }
 }
