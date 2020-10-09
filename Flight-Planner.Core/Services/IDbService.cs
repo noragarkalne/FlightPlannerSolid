@@ -1,8 +1,6 @@
 ﻿using Flight_Planner.Core.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Flight_Planner.Core.Services
@@ -20,4 +18,4 @@ namespace Flight_Planner.Core.Services
     }
 }
 
-//visam klasem kas mantosies no Entity visas sis funkcijas ies
+//all classes that will inherit will recieve these methods

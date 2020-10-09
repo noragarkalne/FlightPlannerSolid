@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using Flight_Planner.Core.Models;
 
 namespace Flight_Planner.Models
@@ -16,8 +13,5 @@ namespace Flight_Planner.Models
         {
             Items = new List<Flight>();
         }
-
-
-        
     }
 }

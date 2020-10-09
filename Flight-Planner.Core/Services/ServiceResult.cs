@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Flight_Planner.Core.Interfaces;
 
 namespace Flight_Planner.Core.Services
@@ -37,6 +33,5 @@ namespace Flight_Planner.Core.Services
             Entity = entity;
             return this;
         }
-
     }
 }

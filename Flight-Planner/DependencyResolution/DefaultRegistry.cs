@@ -16,16 +16,13 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using AutoMapper;
-using Flight_Planner.App_Start;
 using Flight_Planner.Core.Services;
 using Flight_Planner_Data;
 using StructureMap;
 
 namespace Flight_Planner.DependencyResolution {
     using Flight_Planner.Services;
-    using StructureMap.Configuration.DSL;
-    using StructureMap.Graph;
-	
+
     public class DefaultRegistry : Registry {
         #region Constructors and Destructors
 
@@ -38,11 +35,10 @@ namespace Flight_Planner.DependencyResolution {
 					scan.With(new ControllerConvention());
                 });
             //For<IExample>().Use<Example>();
-            For<IFlightPlannerDbContext>().Use<FlightPlannerDbContext>().Transient(); //tiekam vala no usingiem
+            For<IFlightPlannerDbContext>().Use<FlightPlannerDbContext>().Transient(); //no need more to use "using"
             For<IDbService>().Use<DbService>();
             For(typeof(IEntityService<>)).Use(typeof(EntityService<>));
             For<IFlightService>().Use<FlightService>();
-
             var mapper = AutoMapperConfig.GetMapper();
             For<IMapper>().Use(mapper).Singleton();
         }

@@ -15,14 +15,13 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using Flight_Planner.App_Start;
-
+using Flight_Planner;
 using WebActivatorEx;
 
 [assembly: PreApplicationStartMethod(typeof(StructuremapMvc), "Start")]
 [assembly: ApplicationShutdownMethod(typeof(StructuremapMvc), "End")]
 
-namespace Flight_Planner.App_Start {
+namespace Flight_Planner {
 	using System.Web.Mvc;
 
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;

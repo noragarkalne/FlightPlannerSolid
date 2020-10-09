@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
-using Flight_Planner.Core.Models;
-using Flight_Planner.Core.Services;
-using Flight_Planner.Services;
-using Flight_Planner_Data;
-
-namespace Flight_Planner.Models
+﻿namespace Flight_Planner.Models
 {
     public class SearchFlightsRequest 
     {
@@ -17,7 +6,6 @@ namespace Flight_Planner.Models
         public string To { get; set; }
         public string DepartureDate { get; set; }
 
-        
         public SearchFlightsRequest(string from, string to, string departureDate)
         {
             this.From = from;
@@ -34,9 +22,8 @@ namespace Flight_Planner.Models
             {
                 return true;
             }
+
             return false;
         }
-
-        
     }
 }

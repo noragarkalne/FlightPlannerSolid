@@ -52,7 +52,6 @@
     <Compile Include="Models\Flight.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\FlightSearch.cs" />
-    <Compile Include="Services\IAirportService.cs" />
     <Compile Include="Services\IDbService.cs" />
     <Compile Include="Services\IEntityService.cs" />
     <Compile Include="Services\IFlightService.cs" />

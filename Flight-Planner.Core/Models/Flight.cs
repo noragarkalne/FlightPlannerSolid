@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Flight_Planner.Core.Models
 {
     public class Flight : Entity
     {
-        
         public virtual Airport To { get; set; } //lazy loading -virtual
         
         public virtual Airport From { get; set; } //lazy loading - virtual
@@ -38,6 +32,7 @@ namespace Flight_Planner.Core.Models
             {
                 return true;
             }
+
             return false;
         }
     }

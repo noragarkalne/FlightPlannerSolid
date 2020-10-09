@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Flight_Planner.Core.Models;
-
-namespace Flight_Planner.Models
+﻿namespace Flight_Planner.Models
 {
     public class FlightRequest
     {

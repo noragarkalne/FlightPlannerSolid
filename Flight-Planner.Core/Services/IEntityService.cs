@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Flight_Planner.Core.Models;
 
@@ -17,7 +15,6 @@ namespace Flight_Planner.Core.Services
         ServiceResult Delete(T entity);
         ServiceResult Update(T entity);
         bool Exists(int id);
-
     }
 }
-//visam, kas ir Entity
+//for all entyties

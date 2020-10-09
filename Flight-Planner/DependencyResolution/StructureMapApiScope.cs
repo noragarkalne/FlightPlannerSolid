@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Http.Dependencies;
-using System.Web.Mvc;
 using StructureMap;
 
 namespace Flight_Planner.DependencyResolution
@@ -23,10 +21,12 @@ namespace Flight_Planner.DependencyResolution
             {
                 return null;
             }
+
             if (serviceType.IsAbstract || serviceType.IsInterface)
             {
                 return _container.TryGetInstance(serviceType);
             }
+
             return _container.GetInstance(serviceType);
         }
 

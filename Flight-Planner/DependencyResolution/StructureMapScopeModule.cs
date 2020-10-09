@@ -1,8 +1,5 @@
 namespace Flight_Planner.DependencyResolution {
     using System.Web;
-
-    using Flight_Planner.App_Start;
-
     using StructureMap.Web.Pipeline;
 
     public class StructureMapScopeModule : IHttpModule {

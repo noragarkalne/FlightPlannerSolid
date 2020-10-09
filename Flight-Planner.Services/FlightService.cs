@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Threading;
 using System.Threading.Tasks;
 using Flight_Planner.Core.Models;
 using Flight_Planner.Core.Services;
@@ -16,9 +13,6 @@ namespace Flight_Planner.Services
 {
     public class FlightService : EntityService<Flight>, IFlightService
     {
-        //private static object _myObjectList = new object();
-        object tLock = new object();
-
         public FlightService(IFlightPlannerDbContext context) : base(context)
         {
         }

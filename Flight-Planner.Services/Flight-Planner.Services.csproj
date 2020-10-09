@@ -54,7 +54,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AirportService.cs" />
     <Compile Include="DbService.cs" />
     <Compile Include="EntityService.cs" />
     <Compile Include="FlightService.cs" />

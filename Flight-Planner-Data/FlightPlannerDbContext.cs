@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.Entity;
 using Flight_Planner.Core.Models;
 using Flight_Planner_Data.Migrations;
 
@@ -16,7 +11,7 @@ namespace Flight_Planner_Data
            Database.SetInitializer<FlightPlannerDbContext> (null);
 
            Database.SetInitializer<FlightPlannerDbContext>(
-                new MigrateDatabaseToLatestVersion<FlightPlannerDbContext, Configuration>()); // ja bus jaunas migracijas ... viss notiks automatiski un lietotajs  to pat nemana; golden line
+                new MigrateDatabaseToLatestVersion<FlightPlannerDbContext, Configuration>()); // if new migration will happen ... everything will happen automatically, user even do not notice it; golden line
 
         }
         public DbSet<Flight> Flights { get; set; }

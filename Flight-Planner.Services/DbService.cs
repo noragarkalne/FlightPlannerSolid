@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Flight_Planner.Core.Models;
 using Flight_Planner.Core.Services;
@@ -18,6 +17,7 @@ namespace Flight_Planner.Services
         {
             _ctx = context;
         }
+
         public IQueryable<T> Query<T>() where T : Entity
         {
            return _ctx.Set<T>().AsQueryable();
@@ -48,7 +48,7 @@ namespace Flight_Planner.Services
             _ctx.Set<T>().Add(entity);
             _ctx.SaveChanges(); 
             
-            return new ServiceResult(true).Set(entity); // entity-id Sets returns it
+            return new ServiceResult(true).Set(entity);
         }
 
         public ServiceResult Delete<T>(T entity) where T : Entity
@@ -57,9 +57,9 @@ namespace Flight_Planner.Services
             {
                 throw new ArgumentException(nameof(entity));
             }
+
             _ctx.Set<T>().Remove(entity); //Set shows which table to take
             _ctx.SaveChanges();
-
             return new ServiceResult(true);
         }
 
@@ -72,7 +72,6 @@ namespace Flight_Planner.Services
 
             _ctx.Entry(entity).State = EntityState.Modified;
             _ctx.SaveChanges();
-
             return new ServiceResult(true).Set(entity);
 
         }

@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using Flight_Planner.Core.Models;
-using Flight_Planner.Services;
-using Flight_Planner_Data;
-
-namespace Flight_Planner.Models
+﻿namespace Flight_Planner.Models
 {
     public class FlightResponse
     {  
