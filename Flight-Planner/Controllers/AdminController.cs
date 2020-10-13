@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using AutoMapper;
 using Flight_Planner.Attributes;
 using Flight_Planner.Core.Models;
@@ -9,7 +10,7 @@ using Flight_Planner.Models;
 
 namespace Flight_Planner.Controllers
 {
-    [BasicAuthentification]
+    [BasicAuthentification, EnableCors("*", "*", "*")]
     public class AdminController : BasicApiController
     {
         public AdminController(IFlightService flightService, IMapper mapper) 
@@ -60,20 +61,20 @@ namespace Flight_Planner.Controllers
         [HttpDelete, Route("admin-api/flights/{id}")]
         public async Task<IHttpActionResult> Delete(int id)
         {
-            var flight = await _flightService.GetById(id);
+            var task = await _flightService.DeleteFlight(id);
 
-            if (flight != null)
-            {
-                await _flightService.DeleteFlight(id);
-                return Ok();
-            }
-
-            if (flight == null)
+            if (task.Id == id)
             {
                 return Ok();
             }
 
-            return NotFound();
+            if (!task.Succeeded)
+            {
+                return NotFound();
+            }
+
+            return Ok();
+
         }
     }
 }

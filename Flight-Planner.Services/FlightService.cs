@@ -48,16 +48,15 @@ namespace Flight_Planner.Services
 
         public async Task<ServiceResult> DeleteFlight(int id)
         {
-            var flights = await GetFlights();
-            foreach (var flight in flights)
+            var flights = await _ctx.Flights.ToListAsync();
+            var flight = flights.SingleOrDefault(f => f.Id.Equals(id));
+
+            if (flight == null)
             {
-                if (flight.Id.Equals(id))
-                {
-                    return Delete(flight);
-                }
+                return new ServiceResult(id, false);
             }
 
-            return new ServiceResult(false);
+            return Delete(flight);
         }
 
 
